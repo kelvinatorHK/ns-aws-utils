@@ -1,0 +1,11 @@
+node_modules/
+.idea/
+builds/
+npm-debug.log
+npm-debug.log*
+*sublime-project
+*sublime-workspace
+.project
+.DS_Store
+*.swp
+.nyc_output/
