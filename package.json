@@ -2,9 +2,9 @@
   "name": "ns-aws-utils",
   "version": "1.0.1",
   "description": "A utils used by Nuskin AWS team",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc mocha"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/kelvinatorHK/ns-aws-utils/issues"
   },
-  "homepage": "https://github.com/kelvinatorHK/ns-aws-utils#readme"
+  "homepage": "https://github.com/kelvinatorHK/ns-aws-utils#readme",
+  "devDependencies": {
+    "mocha": "^5.0.4",
+    "nyc": "^11.6.0"
+  }
 }
