@@ -41,7 +41,7 @@ function cors(handler, opts) {
                 if (options.origins.length > 0) {
                     if (event && event.headers && event.headers.origin) {
                         let origin = event.headers.origin;
-                        // find out if the event.headrs.origin contains in origins provided by the origin
+                        // find out if the event.headers.origin contains in origins provided by the origin
                         let matchedCORS = options.origins
                             .map((o) => o.trim())
                             .filter((o) => o === origin);

@@ -97,6 +97,29 @@ describe('logger', function() {
             assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
         });
 
+        it('should output an error structure when it is a JSON object with message and stack ', function() {
+            log.setLevel('debug');
+
+            let oldLog = console.log;
+            let outputMessage = 'an exception is happening';
+            let outputError = {
+                message: outputMessage,
+                stack: 'something'
+            };
+
+            let output = {};
+
+            console.log = loggerTestFactory(output);
+            log.debug(outputError);
+            console.log = oldLog;
+
+            let result = output.payload;
+            assert.equal(typeof result, 'string', 'The result should be a string');
+            let resultObj = JSON.parse(result);
+            assert.equal(resultObj.level, 'debug', 'The level should be debug');
+            assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
+        });
+
         it('should output {level: "debug", msg:"test information"}', function() {
             log.setLevel('off');
             let oldLog = console.log;
@@ -115,7 +138,7 @@ describe('logger', function() {
         it('should output {level: "debug", msg:{ key1: \'value1\', key2: \'value2\' }}', function() {
             log.setLevel('debug');
             let oldLog = console.log;
-            let outputJson = { key1: 'value1', key2: 'value2' };
+            let outputJson = {key1: 'value1', key2: 'value2'};
 
             let output = {};
 
@@ -132,7 +155,7 @@ describe('logger', function() {
     });
 
     describe('#info', function() {
-        it('should output {level: "info", msg:"test information"}', function () {
+        it('should output {level: "info", msg:"test information"}', function() {
             log.setLevel('info');
 
             let oldLog = console.info;
@@ -153,7 +176,7 @@ describe('logger', function() {
     });
 
     describe('#warn', function() {
-        it('should output {level: "warn", msg:"test information"}', function () {
+        it('should output {level: "warn", msg:"test information"}', function() {
             log.setLevel('info');
 
             let oldLog = console.warn;
@@ -174,7 +197,7 @@ describe('logger', function() {
     });
 
     describe('#error', function() {
-        it('should output {level: "error", msg:"test information"}', function () {
+        it('should output {level: "error", msg:"test information"}', function() {
             log.setLevel('info');
 
             let oldLog = console.error;

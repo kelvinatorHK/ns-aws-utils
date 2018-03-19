@@ -1,13 +1,16 @@
 'use strict';
 
+const scrub = require('./scrub');
+
 // All the possible values for the LOG_LEVELS
+// Note that 0 (debug), 1 (info), 2 (warn), 3 (error)
 const LOG_LEVELS = ['debug', 'info', 'warn', 'error'];
 
 // The default config is 'info', users can set different level (e.g., 'debug', 'info', 'warn', and 'error').
 // If the user set the value to a value other than those four values, it will NOT log anything
 // For example, if the user do config.level = "off", then no logging will be shown
 const config = {
-    level: 'info'
+    level: LOG_LEVELS[1]
 };
 
 /**
@@ -35,22 +38,22 @@ function getLevel() {
  * @param {string | object} msg the message to print out
  */
 function log(level, msg) {
-    let method = level === 'debug'? 'log' : level;
+    let method = level === LOG_LEVELS[0]? 'log' : level;
 
     if (isPrintingMessage(level)) {
         let data = {level: level};
 
         if (isError(msg)) {
-            data.msg = { message: msg.message, stack: msg.stack };
+            data.msg = {message: msg.message, stack: msg.stack};
         } else {
-            // if msg is of JSON type
-            if (msg && (typeof msg === 'object')) {
-                data.msg = msg;
+            // if msg is of JSON type object
+            if (msg && (typeof msg === 'object') && (msg.constructor !== Array)) {
+                data.msg = scrub(msg);
             } else {
-                data.msg = { message: msg };
+                data.msg = {message: msg};
             }
         }
-
+        // calling the specific console method (log, info, warn, or error)
         console[method](JSON.stringify(data));
     }
 }
@@ -95,10 +98,18 @@ function isError(val) {
 }
 
 module.exports = {
-    debug: (msg) => { log('debug', msg); },
-    info: (msg) => { log('info', msg); },
-    warn: (msg) => { log('warn', msg); },
-    error: (msg) => { log('error', msg); },
+    debug: (msg) => {
+        log(LOG_LEVELS[0], msg);
+    },
+    info: (msg) => {
+        log(LOG_LEVELS[1], msg);
+    },
+    warn: (msg) => {
+        log(LOG_LEVELS[2], msg);
+    },
+    error: (msg) => {
+        log(LOG_LEVELS[3], msg);
+    },
     setLevel: setLevel,
     getLevel: getLevel
 };

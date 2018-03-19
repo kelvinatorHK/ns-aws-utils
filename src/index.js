@@ -1,9 +1,11 @@
 'use strict';
 
-const logger = require('./logger');
 const cors = require('./cors');
+const logger = require('./logger');
+const scrub = require('./scrub');
 
 module.exports = {
+    cors: cors,
     logger: logger,
-    cors: cors
+    scrub: scrub
 };

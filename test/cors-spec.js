@@ -178,7 +178,7 @@ describe('cors', function() {
         };
         let context = {};
 
-        function TestObj() {}
+        let TestObj = function() {};
         TestObj.prototype.gender = 'male';
         let options = new TestObj();
         options.origins = [];
@@ -188,6 +188,4 @@ describe('cors', function() {
             done();
         });
     });
-
-
 });
