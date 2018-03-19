@@ -1,7 +1,9 @@
 'use strict';
 
 const logger = require('./logger');
+const cors = require('./cors');
 
 module.exports = {
-    logger: logger
+    logger: logger,
+    cors: cors
 };

@@ -23,6 +23,24 @@ describe('logger', function() {
         });
     });
 
+    describe('#setLevel', function() {
+        it('should not log anything if you set the log level to nothing', function() {
+            log.setLevel('');
+
+            let oldLog = console.log;
+            let outputMessage = 'debug information';
+
+            let output = {};
+
+            console.log = loggerTestFactory(output);
+            log.debug(outputMessage);
+            console.log = oldLog;
+
+            let result = output.payload;
+            assert.equal(typeof result, 'undefined', 'The result should be undefined');
+        });
+    });
+
     describe('#debug', function() {
         it('should have no debug message when log level=info', function() {
             log.setLevel('info');
@@ -40,7 +58,7 @@ describe('logger', function() {
             assert.equal(typeof result, 'undefined', 'The result should be undefined');
         });
 
-        it('should output {level: "debug", msg:"test information"}', function() {
+        it('should output {level: "debug", msg:{message: "test information"}}', function() {
             log.setLevel('debug');
 
             let oldLog = console.log;
@@ -56,10 +74,10 @@ describe('logger', function() {
             assert.equal(typeof result, 'string', 'The result should be a string');
             let resultObj = JSON.parse(result);
             assert.equal(resultObj.level, 'debug', 'The level should be debug');
-            assert.equal(resultObj.msg, outputMessage, 'The msg should be the same');
+            assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
         });
 
-        it('should be able output error', function() {
+        it('should output an error', function() {
             log.setLevel('debug');
 
             let oldLog = console.log;
@@ -74,9 +92,12 @@ describe('logger', function() {
 
             let result = output.payload;
             assert.equal(typeof result, 'string', 'The result should be a string');
+            let resultObj = JSON.parse(result);
+            assert.equal(resultObj.level, 'debug', 'The level should be debug');
+            assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
         });
 
-        it('should have no debug message when log level is not "debug", "info", "warn", or "error"', function() {
+        it('should output {level: "debug", msg:"test information"}', function() {
             log.setLevel('off');
             let oldLog = console.log;
             let outputMessage = 'debug information';
@@ -89,6 +110,24 @@ describe('logger', function() {
 
             let result = output.payload;
             assert.equal(typeof result, 'undefined', 'The result should be undefined');
+        });
+
+        it('should output {level: "debug", msg:{ key1: \'value1\', key2: \'value2\' }}', function() {
+            log.setLevel('debug');
+            let oldLog = console.log;
+            let outputJson = { key1: 'value1', key2: 'value2' };
+
+            let output = {};
+
+            console.log = loggerTestFactory(output);
+            log.debug(outputJson);
+            console.log = oldLog;
+
+            let result = output.payload;
+            assert.equal(typeof result, 'string', 'The result should be a string');
+            let resultObj = JSON.parse(result);
+            assert.equal(resultObj.level, 'debug', 'The level should be debug');
+            assert.deepEqual(resultObj.msg, outputJson, 'The json should be the same');
         });
     });
 
@@ -109,7 +148,7 @@ describe('logger', function() {
             assert.equal(typeof result, 'string', 'The result should be a string');
             let resultObj = JSON.parse(result);
             assert.equal(resultObj.level, 'info', 'The level should be info');
-            assert.equal(resultObj.msg, outputMessage, 'The msg should be the same');
+            assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
         });
     });
 
@@ -130,7 +169,7 @@ describe('logger', function() {
             assert.equal(typeof result, 'string', 'The result should be a string');
             let resultObj = JSON.parse(result);
             assert.equal(resultObj.level, 'warn', 'The level should be warn');
-            assert.equal(resultObj.msg, outputMessage, 'The msg should be the same');
+            assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
         });
     });
 
@@ -151,60 +190,7 @@ describe('logger', function() {
             assert.equal(typeof result, 'string', 'The result should be a string');
             let resultObj = JSON.parse(result);
             assert.equal(resultObj.level, 'error', 'The level should be error');
-            assert.equal(resultObj.msg, outputMessage, 'The msg should be the same');
+            assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
         });
     });
-
-
-    // it('should output {level: "info", msg:"test information"}', function() {
-    //     let oldInfo = console.info;
-    //     let outputMessage = 'info information';
-    //
-    //     let errorMessage = {};
-    //     console.info = loggerTestFactory('info', outputMessage, errorMessage);
-    //
-    //     log.info(outputMessage);
-    //
-    //     console.info = oldInfo;
-    //     assert.equal(Object.keys(errorMessage).length, 0, errorMessage.msg);
-    // });
-    //
-    // it('should output {level: "warn", msg:"test warning"}', function() {
-    //     let oldWarn = console.warn;
-    //     let outputMessage = 'warn information';
-    //
-    //     let errorMessage = {};
-    //     console.warn = loggerTestFactory('warn', outputMessage, errorMessage);
-    //
-    //     log.warn(outputMessage);
-    //
-    //     console.warn = oldWarn;
-    //     assert.equal(Object.keys(errorMessage).length, 0, errorMessage.msg);
-    // });
-    //
-    // it('should output {level: "error", msg:"test error"}', function() {
-    //     let oldError = console.error;
-    //     let outputMessage = 'error information';
-    //
-    //     let errorMessage = {};
-    //     console.error = loggerTestFactory('error', outputMessage, errorMessage);
-    //
-    //     log.error(outputMessage);
-    //
-    //     console.error = oldError;
-    //     assert.equal(Object.keys(errorMessage).length, 0, errorMessage.msg);
-    // });
-    //
-    // it('should output {level: "info", msg:"test information", stack}', function() {
-    //     let oldInfo = console.info;
-    //     let outputMessage = 'info information';
-    //
-    //     let errorMessage = {};
-    //     console.info = loggerTestFactory('info', outputMessage, errorMessage);
-    //
-    //     log.info(outputMessage);
-    //
-    //     console.info = oldInfo;
-    //     assert.equal(Object.keys(errorMessage).length, 0, errorMessage.msg);
-    // });
 });

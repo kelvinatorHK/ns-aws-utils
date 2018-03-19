@@ -41,10 +41,14 @@ function log(level, msg) {
         let data = {level: level};
 
         if (isError(msg)) {
-            data.msg = msg.message;
-            data.stack = msg.stack;
+            data.msg = { message: msg.message, stack: msg.stack };
         } else {
-            data.msg = msg;
+            // if msg is of JSON type
+            if (msg && (typeof msg === 'object')) {
+                data.msg = msg;
+            } else {
+                data.msg = { message: msg };
+            }
         }
 
         console[method](JSON.stringify(data));
@@ -54,7 +58,7 @@ function log(level, msg) {
 /**
  * isPrintingMessage is a function to determine if we should print the log message.
  *
- * @param {string} level
+ * @param {!string} level log level which the user is calling (e.g., log.warn())
  * @return {boolean} a boolean to indicate if log message
  */
 function isPrintingMessage(level) {
