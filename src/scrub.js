@@ -19,7 +19,8 @@ function scrub(obj) {
     for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
             value = obj[key];
-            if ((typeof value === 'object') && (value.constructor !== Array)) {
+            // note that 'null' is an object
+            if (value && (typeof value === 'object') && (value.constructor !== Array)) {
                 // if it is another substructure, call scrub again
                 rv[key] = scrub(value);
             } else {

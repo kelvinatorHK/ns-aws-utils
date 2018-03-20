@@ -10,6 +10,12 @@ describe('scrub', function() {
         assert.deepEqual(scrub(obj), obj, 'It should be the same');
     });
 
+    it('should handle an object with a null attribute', function() {
+        let obj = {abc: null};
+
+        assert.deepEqual(scrub(obj), obj, 'It should be the same');
+    });
+
     it('should return the same simple object without scrubbing', function() {
         let obj = {
             attr1: 'abc',
