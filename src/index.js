@@ -2,10 +2,10 @@
 
 const cors = require('./cors');
 const logger = require('./logger');
-const scrub = require('./scrub');
+const scrubber = require('./scrubber');
 
 module.exports = {
     cors: cors,
     logger: logger,
-    scrub: scrub
+    scrubber: scrubber
 };

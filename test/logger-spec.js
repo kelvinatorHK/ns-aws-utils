@@ -41,6 +41,56 @@ describe('logger', function() {
         });
     });
 
+    describe('#setScrubbing', function() {
+        it('should scrub the sensitive data by default', function() {
+            log.setLevel('info');
+
+            let oldInfo = console.info;
+            let outputMessage = {
+                password: 'secret'
+            };
+
+            let output = {};
+
+            console.info = loggerTestFactory(output);
+            log.info(outputMessage);
+            console.info = oldInfo;
+
+            let result = output.payload;
+            assert.equal(typeof result, 'string', 'The result should be a string');
+            let resultObj = JSON.parse(result);
+            assert.equal(resultObj.msg.password, '********', 'The data should be scrubbed');
+        });
+
+        it('should be able to turn off scrubbing', function() {
+            log.setLevel('info');
+            log.setScrubbing(false);
+
+            let oldInfo = console.info;
+            let outputMessage = {
+                password: 'secret'
+            };
+
+            let output = {};
+
+            console.info = loggerTestFactory(output);
+            log.info(outputMessage);
+            console.info = oldInfo;
+
+            let result = output.payload;
+            assert.equal(typeof result, 'string', 'The result should be a string');
+            let resultObj = JSON.parse(result);
+            assert.notEqual(resultObj.msg.password, '********', 'The data should NOT be scrubbed');
+        });
+    });
+
+    describe('#config', function() {
+        it('should control the log level using log.config.level', function() {
+            log.config.level = 'warn';
+            assert.equal(log.getLevel(), 'warn');
+        });
+    });
+
     describe('#debug', function() {
         it('should have no debug message when log level=info', function() {
             log.setLevel('info');

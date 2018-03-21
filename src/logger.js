@@ -1,6 +1,6 @@
 'use strict';
 
-const scrub = require('./scrub');
+const scrubber = require('./scrubber');
 
 // All the possible values for the LOG_LEVELS
 // Note that 0 (debug), 1 (info), 2 (warn), 3 (error)
@@ -10,7 +10,8 @@ const LOG_LEVELS = ['debug', 'info', 'warn', 'error'];
 // If the user set the value to a value other than those four values, it will NOT log anything
 // For example, if the user do config.level = "off", then no logging will be shown
 const config = {
-    level: LOG_LEVELS[1]
+    level: LOG_LEVELS[1], // default log level is 'info'
+    scrubbing: true // default scrubbing is true
 };
 
 /**
@@ -20,6 +21,15 @@ const config = {
  */
 function setLevel(level) {
     config.level = level;
+}
+
+/**
+ * setScrubbing is a setter function to control if the logger scrubs sensitive data or not.
+ *
+ * @param {boolean} scrubbing a boolean to control the scrubbing
+ */
+function setScrubbing(scrubbing) {
+    config.scrubbing = scrubbing;
 }
 
 /**
@@ -48,7 +58,11 @@ function log(level, msg) {
         } else {
             // if msg is of JSON type object
             if (msg && (typeof msg === 'object') && (msg.constructor !== Array)) {
-                data.msg = scrub(msg);
+                if (config.scrubbing) {
+                    data.msg = scrubber.scrub(msg);
+                } else {
+                    data.msg = msg;
+                }
             } else {
                 data.msg = {message: msg};
             }
@@ -68,7 +82,7 @@ function isPrintingMessage(level) {
     let rv = false;
     let configuredLevelValue = -1;
     if (config.level) {
-        configuredLevelValue = LOG_LEVELS.indexOf(config.level);
+        configuredLevelValue = LOG_LEVELS.indexOf(config.level); // it will be -1 if not found
     }
 
     // make sure that the user's configured level is a value defined in LOG_LEVELS
@@ -111,5 +125,7 @@ module.exports = {
         log(LOG_LEVELS[3], msg);
     },
     setLevel: setLevel,
-    getLevel: getLevel
+    getLevel: getLevel,
+    setScrubbing: setScrubbing,
+    config: config
 };

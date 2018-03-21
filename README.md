@@ -13,6 +13,7 @@ a sensitive information.
 
 ## NPM and Github Repo
 https://www.npmjs.com/package/ns-aws-utils
+<br />
 https://github.com/kelvinatorHK/ns-aws-utils
 
 ## Installation
@@ -66,7 +67,10 @@ exports.handler = cors(function(event, context, callback) {
 const nsAwsUtils = require('ns-aws-utils');
 const log = nsAwsUtils.logger;
 
-log.setLevel('debug');  // Change the log level to 'debug' (default is 'info')
+// if you do not set the log level, the default is 'info'
+log.setLevel('debug');  // Change the log level to 'debug'
+log.config.level = 'debug'; // Or you can change the log level this way
+
 log.debug('Hello debug');
 log.info('Hello info');
 log.warn('Hello warn');
@@ -94,7 +98,15 @@ Then, the result will not have the default 'message' as the key
 
 **To turn off the logging programmatically**
 ```javascript
-// Note that if you set anything other than 'debug', 'info', 'warn', 'error',
+// Note that if you set the level anything other than 'debug', 'info', 'warn', 'error',
 // you basically turn off the logging
 log.setLevel('off');
 ```
+
+**To turn off scrubbing programmatically**
+Sensitive data scrubbing is turned on by default.  You can turn it off:
+```javascript
+log.setScrubbing(false);
+```
+
+
