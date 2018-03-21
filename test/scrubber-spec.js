@@ -17,6 +17,14 @@ describe('scrubber', function() {
             assert.deepEqual(scrubber.scrub(obj), obj, 'It should be the same');
         });
 
+        it('should handle an object with a null prototype', function() {
+            let obj = Object.create(null);
+            obj['countryCode'] = 'US';
+            obj['atp'] = 'true';
+
+            assert.deepEqual(scrubber.scrub(obj), obj, 'It should be the same');
+        });
+
         it('should return the same simple object without scrubbing', function() {
             let obj = {
                 attr1: 'abc',

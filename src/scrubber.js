@@ -84,7 +84,9 @@ function scrub(obj) {
 
     let value;
     for (let key in obj) {
-        if (obj.hasOwnProperty(key)) {
+        // Note that queryStringParameters is a null prototype in the event object of AWS serverless
+        // https://github.com/hapijs/hapi/issues/3280
+        if (Object.prototype.hasOwnProperty.call(obj, key)) {
             value = obj[key];
             // note that 'null' is an object
             if (value && (typeof value === 'object') && (value.constructor !== Array)) {
