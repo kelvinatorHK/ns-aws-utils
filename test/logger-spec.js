@@ -62,6 +62,39 @@ describe('logger', function() {
             assert.equal(resultObj.msg.password, '********', 'The data should be scrubbed');
         });
 
+        describe('#setTag', function() {
+            it('should display tag', function() {
+                log.setLevel('info');
+
+                let oldInfo = console.info;
+                let outputTag = 'my tag';
+                log.setTag(outputTag);
+
+                let output = {};
+
+                console.info = loggerTestFactory(output);
+                log.info('first message');
+                log.info('second message');
+                console.info = oldInfo;
+
+                let result = output.payload;
+                assert.equal(typeof result, 'string', 'The result should be a string');
+                let resultObj = JSON.parse(result);
+                assert.equal(resultObj.tag, outputTag, 'The tag should be displayed in the log');
+                assert.equal(resultObj.msg.message, 'second message', 'The result should be second message');
+            });
+        });
+
+        describe('#getTag', function() {
+            it('should return the tag ', function() {
+                let aTag = 'my tag';
+                log.setTag(aTag);
+                let result = log.getTag();
+
+                assert.equal(result, aTag, 'getTag should return the same result');
+            });
+        });
+
         it('should be able to turn off scrubbing', function() {
             log.setLevel('info');
             log.setScrubbing(false);
@@ -264,6 +297,17 @@ describe('logger', function() {
             let resultObj = JSON.parse(result);
             assert.equal(resultObj.level, 'error', 'The level should be error');
             assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
+        });
+    });
+
+    describe('#testing setTag...', function() {
+        it('should just do it', function() {
+            log.setTag({requestId: 'some Id', resourceId: '12345'}); // set the tag with a JSON object
+            log.info({myMessage: 'message 1'});
+            log.info({myMessage: 'message 2'});
+            //log.setTag();
+            log.info({myMessage: 'message 3'});
+            log.info({myMessage: 'message 4'});
         });
     });
 });

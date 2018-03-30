@@ -14,6 +14,27 @@ const config = {
     scrubbing: true // default scrubbing is true
 };
 
+// This tag is perpetual.  That means if this tag is set, the subsequent log message will contain it.
+let tag = '';
+
+/**
+ * setTag is a setter function to set the tag in the log message.
+ *
+ * @param {string | object} [newTag] a string or object to be tagged
+ */
+function setTag(newTag) {
+    tag = newTag;
+}
+
+/**
+ * getTag is a getter function to get the current tag in the log message.
+ *
+ * @return {string | object} the current tag in the logger
+ */
+function getTag() {
+    return tag;
+}
+
 /**
  * setLevel is a setter function to set the log level.
  *
@@ -52,6 +73,10 @@ function log(level, msg) {
 
     if (isPrintingMessage(level)) {
         let data = {level: level};
+
+        if (tag) {
+            data.tag = tag;
+        }
 
         if (isError(msg)) {
             data.msg = {message: msg.message, stack: msg.stack};
@@ -126,6 +151,8 @@ module.exports = {
     },
     setLevel: setLevel,
     getLevel: getLevel,
+    setTag: setTag,
+    getTag: getTag,
     setScrubbing: setScrubbing,
     config: config
 };

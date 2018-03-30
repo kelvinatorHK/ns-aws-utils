@@ -96,17 +96,40 @@ Then, the result will not have the default 'message' as the key
 {"level":"info","msg":{"myAttribute":"it is cool"}}
 ```
 
-**To turn off the logging programmatically**
+**To turn off the logging programmatically:**
 ```javascript
 // Note that if you set the level anything other than 'debug', 'info', 'warn', 'error',
 // you basically turn off the logging
 log.setLevel('off');
 ```
 
-**To turn off scrubbing programmatically**
+**To turn off scrubbing programmatically:**
+
 Sensitive data scrubbing is turned on by default.  You can turn it off:
 ```javascript
 log.setScrubbing(false);
 ```
 
+**For setting a tag (perpetual):**
 
+Note that the log message will only display the last tag you set before logging the message
+```javascript
+log.setTag('My new tag');  // set the tag with a string
+// Note that the second setTag() overwrite the previous tag
+log.setTag({requestId: 'some Id', resourceId: '12345'}); // set the tag with a JSON object
+log.info({myMessage: 'message 1'});
+log.info({myMessage: 'message 2'});
+```
+
+Then, the result will look like the following:
+```
+{"level":"info","tag":{"requestId":"some Id","resourceId":"12345"},"msg":{"myMessage":"message 1"}}
+{"level":"info","tag":{"requestId":"some Id","resourceId":"12345"},"msg":{"myMessage":"message 2"}}
+```
+
+If you want to remove the tag, just pass nothing or set it to null/empty string:
+```javascript
+log.setTag();  // remove the tag (method #1)
+log.setTag('');  // remove the tag (method #2)
+log.setTag(null);  // remove the tag (method #3)
+```

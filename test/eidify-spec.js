@@ -3,6 +3,14 @@
 const assert = require('assert');
 const eidify = require('../src/eidify');
 
+/**
+ * createEidifyPromise is a helper function to return a promise wrapping the eidify function.
+ *
+ * @param {function} handler the original handler function
+ * @param {Object} event an event data is passed by AWS Lambda service
+ * @param {Object} context a runtime information is passed by AWS Lambda service
+ * @return {Promise} a promise wrapping the eidify function
+ */
 function createEidifyPromise(handler, event, context) {
     return new Promise(function(resolve, reject) {
         eidify(handler)(event, context, function(err, res) {
@@ -47,7 +55,7 @@ describe('eidify', function() {
         let event = {
             requestContext: {
                 authorizer: {
-                    accountId: 'US00452484',
+                    accountId: 'US00452484'
                 }
             }
         };
