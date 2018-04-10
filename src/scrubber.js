@@ -1,7 +1,7 @@
 'use strict';
 
 const DEFAULT_KEYS = ['pan', 'CardNumber', 'TrackOne', 'IBAN',
-    'VerificationCode', 'BankAccount', 'pass', 'password', 'taxIDs', 'newPassword'];
+    'VerificationCode', 'BankAccount', 'pass', 'password', 'taxIDs', 'newPassword', 'Authorization', 'soa-auth'];
 
 const config = {
     // The default RegExp pattern is
@@ -80,26 +80,42 @@ function setReplacement(replacement) {
  * @return {object} a JSON object with the sensitive information scrubbed.
  */
 function scrub(obj) {
-    let rv = {};
+    const seen = new WeakSet;
 
-    let value;
-    for (let key in obj) {
-        // Note that queryStringParameters is a null prototype in the event object of AWS serverless
-        // https://github.com/hapijs/hapi/issues/3280
-        if (Object.prototype.hasOwnProperty.call(obj, key)) {
-            value = obj[key];
-            // note that 'null' is an object
-            if (value && (typeof value === 'object') && (value.constructor !== Array)) {
-                // if it is another substructure, call scrub again
-                rv[key] = scrub(value);
+    return recursiveScrub(obj, seen);
+}
+
+function recursiveScrub(original, seen) {
+    let rv;
+
+    if ((original !== null) && (typeof original === 'object')) {
+        // Note that we are going to scrub the object which is Recursive
+        if (seen.has(original)) {
+            rv = config.replacement;
+        } else {
+            seen.add(original);
+            if (original.constructor === Array) {
+                // if it is an Array, we go scrub each individual item
+                rv = original.map(function(item) {
+                    return recursiveScrub(item, seen);
+                });
             } else {
-                if (key.match(config.pattern)) {
-                    rv[key] = config.replacement;
-                } else {
-                    rv[key] = value;
+                rv = {};
+                for (let key in original) {
+                    // Note that queryStringParameters is a null prototype in the event object of AWS serverless
+                    // https://github.com/hapijs/hapi/issues/3280
+                    if (Object.prototype.hasOwnProperty.call(original, key)) {
+                        if (key.match(config.pattern)) {
+                            rv[key] = config.replacement;
+                        } else {
+                            rv[key] = recursiveScrub(original[key], seen);
+                        }
+                    }
                 }
             }
         }
+    } else {
+        rv = original;
     }
 
     return rv;

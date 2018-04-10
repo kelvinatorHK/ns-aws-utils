@@ -300,14 +300,25 @@ describe('logger', function() {
         });
     });
 
-    describe('#testing setTag...', function() {
-        it('should just do it', function() {
-            log.setTag({requestId: 'some Id', resourceId: '12345'}); // set the tag with a JSON object
-            log.info({myMessage: 'message 1'});
-            log.info({myMessage: 'message 2'});
-            //log.setTag();
-            log.info({myMessage: 'message 3'});
-            log.info({myMessage: 'message 4'});
+    describe('#setTag', function() {
+        it('should see the tag in the log', function() {
+            let oldLog = console.info;
+            let outputMessage = 'test information';
+            let tagMessage = {requestId: 'some Id', resourceId: '12345'};
+            let output = {};
+
+            console.info = loggerTestFactory(output);
+            log.setTag(tagMessage); // set the tag with a JSON object
+            log.info(outputMessage);
+            console.info = oldLog;
+
+
+            let result = output.payload;
+            assert.equal(typeof result, 'string', 'The result should be a string');
+            let resultObj = JSON.parse(result);
+            assert.equal(resultObj.level, 'info', 'The level should be info');
+            assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
+            assert.deepEqual(resultObj.tag, tagMessage, 'The tag should be the same');
         });
     });
 });

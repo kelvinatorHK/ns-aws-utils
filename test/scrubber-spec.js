@@ -25,6 +25,16 @@ describe('scrubber', function() {
             assert.deepEqual(scrubber.scrub(obj), obj, 'It should be the same');
         });
 
+        it('should handle a recursive object', function() {
+            let obj = {a: 'abc'};
+            obj.b = obj;
+
+            let scrubbed = scrubber.scrub(obj);
+
+            assert.equal(scrubbed.a, obj.a, 'It should be the same');
+            assert.equal(scrubbed.b, '********', 'The recursive value should be masked');
+        });
+
         it('should return the same simple object without scrubbing', function() {
             let obj = {
                 attr1: 'abc',
