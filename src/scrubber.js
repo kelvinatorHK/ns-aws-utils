@@ -85,6 +85,13 @@ function scrub(obj) {
     return recursiveScrub(obj, seen);
 }
 
+/**
+ * recursiveScrub is a helper function to scrub the object recursively.
+ *
+ * @param {*} original the original object to be scrubbed
+ * @param {WeakSet} seen a dictionary of the object that we have seen
+ * @return {*} a scrubbed data
+ */
 function recursiveScrub(original, seen) {
     let rv;
 

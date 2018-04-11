@@ -60,13 +60,25 @@ describe('scrubber', function() {
             assert.deepEqual(scrubber.scrub(obj), obj, 'It should be the same');
         });
 
-        it('should handle the array without scrubbing', function() {
+        it('should handle an array without scrubbing', function() {
             let obj = {
                 attr1: 'abc',
                 attr2: ['a1', 'a2']
             };
 
             assert.deepEqual(scrubber.scrub(obj), obj, 'It should be the same');
+        });
+
+        it('should handle an array with sensitive information inside', function() {
+            let obj = {
+                attr1: 'abc',
+                attr2: ['a1', 'a2', {username: 'no-secret', password: 'secret'}]
+            };
+
+            let scrubbed = scrubber.scrub(obj);
+            assert.equal(scrubbed.attr2[2].username, 'no-secret', 'The result should be no-secret');
+            assert.equal(scrubbed.attr2[2].password, '********', 'The sensitive data should be scrubbed');
+            assert.equal(scrubbed.attr2[0], 'a1', 'The result should be a1');
         });
 
         it('should scrub the sensitive data in the first level', function() {
