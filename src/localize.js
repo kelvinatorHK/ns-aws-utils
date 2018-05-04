@@ -16,6 +16,9 @@ const props = require('config').get('properties');
  *                        name and replaces them in order.
  * @returns {Promise.<*>}
  */
+// TODO: add documentation to readme
+//       gateway cache expires once an hour
+//       Dynamo cache expires when manually cleared
 async function localize(stringInfos, apps, locales, replaceVarsBy) {
     let retVal;
 
@@ -74,8 +77,7 @@ async function getTranslations(queryParams) {
                 headers: {
                     'Content-Type': 'application/json'/*, TODO: code review
                     'client_id': props.clientId,
-                    'client_secret': props.clientSecret,
-                    'Authorization': `Basic ${process.env.BASIC_AUTH_CREDS}`*/
+                    'client_secret': props.clientSecret*/
                 }
             },
             response = await axios(config);
