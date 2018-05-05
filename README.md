@@ -133,3 +133,49 @@ log.setTag();  // remove the tag (method #1)
 log.setTag('');  // remove the tag (method #2)
 log.setTag(null);  // remove the tag (method #3)
 ```
+
+### For Localization handler:
+
+**Parameters**
+
+-   stringInfos: array of stringInfo structures.
+-   apps: array of application names to look for the strings in.
+-   locales: (optional) array of locales in order of return priority. If not specified will look for a locale in the Accept-language header. If not found there then will default to en_US.
+-   replaceVarsBy: 'order' - (optionsl) replace variables in order, 'name' (default) replace variables by matching the name with the placeholder in the string.
+
+**Usage example:**
+```javascript
+const nsAwsUtils = require('ns-aws-utils');
+const localize = nsAwsUtils.localize;
+
+let localizations = localize(
+    [
+        {
+            stringName: 'string1'
+        },
+        {
+            stringName: 'string2',
+            variables: {
+                varName1: 'replace value1',
+                varName2: 'replace value2'
+            }
+        }
+    ],
+    ['shop', 'common'],
+    ['es_ES', 'en_ES'],
+    'order'
+)
+```
+**Returns:**
+```json
+[
+    {
+        "stringName": "string1",
+        "localizedString": "This is string one"
+    },
+    {
+        "stringName": "string2",
+        "localizedString": "This replace value1 string replace value2"
+    }
+]
+```
