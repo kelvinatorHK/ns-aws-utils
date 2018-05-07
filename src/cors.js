@@ -22,44 +22,69 @@ const defaultOptions = {
  * @return {function} a new handler function that will wrap the CORS headers
  */
 function cors(handler, opts) {
-    return (event, context, callback) =>
-        handler(event, context, (err, res) => {
-            let options;
-            if (opts) {
-                // deep copy from defaultOptions
-                options = JSON.parse(JSON.stringify(defaultOptions));
-                for (let prop in opts) {
-                    if (opts.hasOwnProperty(prop)) {
-                        options[prop] = opts[prop];
-                    }
+    return (event, context, callback) => {
+        let rv;
+
+        // if the handler function prototype has argument less than 3 (that means it has no callback)
+        if (handler && handler.length < 3) {
+            // add the CORS to the returned value
+            // Note that we purposely not throw any error, the await should do the 'catch'
+            rv = handler(event, context).then((res) => addCORSWithOptions(res, event, opts));
+        } else {
+            rv = handler(event, context, (err, res) => {
+                if (res) {
+                    res = addCORSWithOptions(res, event, opts);
                 }
-            } else {
-                options = defaultOptions;
-            }
+                callback(err, res);
+            });
+        }
 
-            if (options.origins) {
-                if (options.origins.length > 0) {
-                    if (event && event.headers && event.headers.origin) {
-                        let origin = event.headers.origin;
-                        // find out if the event.headers.origin contains in origins provided by the origin
-                        let matchedCORS = options.origins
-                            .map((o) => o.trim())
-                            .filter((o) => o === origin);
-
-                        if (matchedCORS.length > 0) {
-                            addCORSHeaders(options, origin, res);
-                        }
-                    }
-                }
-            } else {
-                // if origins is null, that means we allow all origins
-                addCORSHeaders(options, '*', res);
-            }
-
-            callback(err, res);
-        });
+        return rv;
+    };
 }
 
+/**
+ * addCORSWithOptions is a helper function to add the CORS to the response header.  It takes
+ * the event and opts to determine if we need to add the CORS.
+ *
+ * @param {object} res the response sending to the client
+ * @param {object} event the event object for the Lambda service
+ * @param {object} opts the user options in overlaying the default options.
+ * @return {object} a response object with a CORS header
+ */
+function addCORSWithOptions(res, event, opts) {
+    let options;
+    if (opts) {
+        // deep copy from defaultOptions
+        options = JSON.parse(JSON.stringify(defaultOptions));
+        Object.keys(opts).forEach(function(prop) {
+            options[prop] = opts[prop];
+        });
+    } else {
+        options = defaultOptions;
+    }
+
+    if (options.origins) {
+        if (options.origins.length > 0) {
+            if (event && event.headers && event.headers.origin) {
+                let origin = event.headers.origin;
+                // find out if the event.headers.origin contains in origins provided by the origin
+                let matchedCORS = options.origins
+                    .map((o) => o.trim())
+                    .filter((o) => o === origin);
+
+                if (matchedCORS.length > 0) {
+                    addCORSHeaders(options, origin, res);
+                }
+            }
+        }
+    } else {
+        // if origins is null, that means we allow all origins
+        addCORSHeaders(options, '*', res);
+    }
+
+    return res;
+}
 
 /**
  * addCORSHeaders is a helper function to add the CORS headers to res
