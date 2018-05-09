@@ -1,5 +1,5 @@
 {
   "properties": {
-    "home": "https://api.cloud.nuskin.com"
+    "awsBase": "https://api.cloud.nuskin.com"
   }
 }
