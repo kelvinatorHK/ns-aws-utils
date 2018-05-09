@@ -16,9 +16,6 @@ const props = require('config').get('properties');
  *                        name and replaces them in order.
  * @returns {Promise.<*>}
  */
-// TODO: add documentation to readme
-//       gateway cache expires once an hour
-//       Dynamo cache expires when manually cleared
 async function localize(stringInfos, apps, locales, replaceVarsBy) {
     let retVal;
 
@@ -70,10 +67,9 @@ async function getTranslations(queryParams) {
     let retVal = null;
 
     try {
-        log.info({url: `${props.home}${queryParams}`});
         let config = {
                 method: 'GET',
-                url: `${props.home}/localization/v1${queryParams}`,
+                url: `${props.awsBase}/localization/v1${queryParams}`,
                 headers: {
                     'Content-Type': 'application/json'/*, TODO: code review
                     'client_id': props.clientId,
@@ -118,10 +114,6 @@ function getStringVariables(strings) {
  */
 function buildQueryParams(stringInfos, apps, locales) {
     let queryParams = '?string=';
-
-    log.info({stringInfos: stringInfos});
-    log.info({apps: apps});
-    log.info({locales: locales});
 
     stringInfos.forEach((stringInfo, i, arr) => {
         queryParams += stringInfo.stringName;

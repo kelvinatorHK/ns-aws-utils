@@ -1,5 +1,5 @@
 {
   "properties": {
-    "home": "https://stageapi.cloud.nuskin.com"
+    "awsBase": "https://stageapi.cloud.nuskin.com"
   }
 }

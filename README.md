@@ -136,6 +136,12 @@ log.setTag(null);  // remove the tag (method #3)
 
 ### For Localization handler:
 
+The localization handler retrieves localized strings from the string cache in 
+the home system and stores them in a Dynamo table and then returns them to the 
+requester in a lazy load pattern.  The strings are cached in AWS's API Gateway 
+for an hour and stored indefinately in Dynmo.  The strings can be expired in 
+Dynamo with a manual HTTP call.
+
 **Parameters**
 
 -   stringInfos: array of stringInfo structures.
