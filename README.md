@@ -142,6 +142,9 @@ requester in a lazy load pattern.  The strings are cached in AWS's API Gateway
 for an hour and stored indefinately in Dynmo.  The strings can be expired in 
 Dynamo with a manual HTTP call.
 
+**Note:** A property named awsBase needs to be set in the calling project set
+to the AWS base URL to call the Localization service. ex. https://devapi.cloud.nuskin.com
+
 **Parameters**
 
 -   stringInfos: array of stringInfo structures.
