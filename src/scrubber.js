@@ -108,17 +108,13 @@ function recursiveScrub(original, seen) {
                 });
             } else {
                 rv = {};
-                for (let key in original) {
-                    // Note that queryStringParameters is a null prototype in the event object of AWS serverless
-                    // https://github.com/hapijs/hapi/issues/3280
-                    if (Object.prototype.hasOwnProperty.call(original, key)) {
-                        if (key.match(config.pattern)) {
-                            rv[key] = config.replacement;
-                        } else {
-                            rv[key] = recursiveScrub(original[key], seen);
-                        }
+                Object.keys(original).forEach(function(key) {
+                    if (key.match(config.pattern)) {
+                        rv[key] = config.replacement;
+                    } else {
+                        rv[key] = recursiveScrub(original[key], seen);
                     }
-                }
+                });
             }
         }
     } else {

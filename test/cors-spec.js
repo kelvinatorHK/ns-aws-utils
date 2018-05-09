@@ -188,4 +188,61 @@ describe('cors', function() {
             done();
         });
     });
+
+    it('should handle an error when the handler call callback with an error', async function() {
+        let event = {};
+        let context = {};
+
+        let handlerWithError = (event, context, callback) => {
+            callback(new Error('System Error'), null);
+        };
+
+        try {
+            let response = await new Promise(function(resolve, reject) {
+                cors(handlerWithError)(event, context, function(err, res) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(res);
+                    }
+                });
+            });
+
+            assert(false, 'it should have an error');
+        } catch (e) {
+            assert.notEqual(e, null, 'Error should not be null');
+        }
+    });
+
+    it('should have CORS headers when we are using async/await style of handler', async function() {
+        let event = {};
+        let context = {};
+
+        let asyncHandler = async (event, context) => {
+            return {statusCode: 200, body: 'Hello'};
+        };
+
+        try {
+            let response = await cors(asyncHandler)(event, context);
+            assert.equal(response.statusCode, 200, 'The response should be statusCode of 200');
+        } catch (e) {
+            assert.ifError(e);
+        }
+    });
+
+    it('should throw an error when using async/await style of handler', async function() {
+        let event = {};
+        let context = {};
+
+        let asyncHandler = async (event, context) => {
+            throw new Error('Unexpected error');
+        };
+
+        try {
+            let response = await cors(asyncHandler)(event, context);
+            assert(false, 'it should have an error');
+        } catch (e) {
+            assert.notEqual(e, null, 'Error should not be null');
+        }
+    });
 });

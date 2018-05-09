@@ -79,4 +79,42 @@ describe('eidify', function() {
                 assert.fail(error, '---', 'should have no error');
             });
     });
+
+    it('should handle async/await style of handler', async function() {
+        let asyncHandler = async (event, context) => {
+            return {statusCode: 200, body: 'Hello'};
+        };
+
+        let response = await eidify(asyncHandler)(eventWithEid, {});
+        assert(response, 'it should have a response');
+        assert(response.headers, 'it should have a response header');
+        assert.equal(response.headers.eid, eid, 'it should have a eid in the response header');
+
+    });
+
+    it('should handle an error when the handler call callback with an error', async function() {
+        let event = {};
+        let context = {};
+
+        let handlerWithError = (event, context, callback) => {
+            callback(new Error('System Error'), null);
+        };
+
+        try {
+            let response = await new Promise(function(resolve, reject) {
+                eidify(handlerWithError)(event, context, function(err, res) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(res);
+                    }
+                });
+            });
+
+            assert(false, 'it should have an error');
+        } catch (e) {
+            assert.notEqual(e, null, 'Error should not be null');
+        }
+
+    });
 });
