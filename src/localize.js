@@ -1,7 +1,7 @@
 
 const log = require('./logger');
 const axios = require('axios');
-const props = require('config').get('properties');
+const config = require('config');
 
 /**
  * localize is called to get localized strings. It calls the localization service
@@ -67,16 +67,16 @@ async function getTranslations(queryParams) {
     let retVal = null;
 
     try {
-        let config = {
+        let params = {
                 method: 'GET',
-                url: `${props.awsBase}/localization/v1${queryParams}`,
+                url: `${config.properties.awsBase}/localization/v1${queryParams}`,
                 headers: {
-                    'Content-Type': 'application/json'/*, TODO: code review
-                    'client_id': props.clientId,
-                    'client_secret': props.clientSecret*/
+                    'Content-Type': 'application/json'/*, TODO: uncomment if needed
+                    'client_id': config.properties.clientId,
+                    'client_secret': config.properties.clientSecret*/
                 }
             },
-            response = await axios(config);
+            response = await axios(params);
 
         log.debug({localizeRead: response.data});
 
