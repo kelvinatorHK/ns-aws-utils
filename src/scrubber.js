@@ -1,7 +1,7 @@
 'use strict';
 
-const DEFAULT_KEYS = ['pan', 'CardNumber', 'TrackOne', 'IBAN',
-    'VerificationCode', 'BankAccount', 'pass', 'password', 'taxIDs', 'newPassword', 'Authorization', 'soa-auth'];
+const DEFAULT_KEYS = ['pan', 'CardNumber', 'TrackOne', 'IBAN', 'VerificationCode', 'BankAccount', 'pass', 
+    'password', 'taxIDs', 'newPassword', 'Authorization', 'soa-auth', 'client_secret'];
 
 const config = {
     // The default RegExp pattern is
