@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 const eidify = require('../src/eidify');
+const cors = require('../src/cors');
 
 /**
  * createEidifyPromise is a helper function to return a promise wrapping the eidify function.
@@ -90,6 +91,30 @@ describe('eidify', function() {
         assert(response.headers, 'it should have a response header');
         assert.equal(response.headers.eid, eid, 'it should have a eid in the response header');
 
+    });
+
+    it('should handle both eidify/cors using together with node8', async function() {
+        let asyncHandler = async (event, context) => {
+            return {statusCode: 200, body: 'Hello'};
+        };
+
+        let response = await eidify(cors(asyncHandler))(eventWithEid, {});
+        assert(response, 'it should have a response');
+        assert(response.headers, 'it should have a response header');
+        assert.equal(response.headers.eid, eid, 'it should have a eid in the response header');
+        assert.equal(response.headers['Access-Control-Allow-Origin'], '*', 'it should have CORS');
+    });
+
+    it('should handle both cors/eidify using together with node8', async function() {
+        let asyncHandler = async (event, context) => {
+            return {statusCode: 200, body: 'Hello'};
+        };
+
+        let response = await cors(eidify(asyncHandler))(eventWithEid, {});
+        assert(response, 'it should have a response');
+        assert(response.headers, 'it should have a response header');
+        assert.equal(response.headers.eid, eid, 'it should have a eid in the response header');
+        assert.equal(response.headers['Access-Control-Allow-Origin'], '*', 'it should have CORS');
     });
 
     it('should handle an error when the handler call callback with an error', async function() {
