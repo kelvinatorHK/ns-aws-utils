@@ -22,25 +22,20 @@ const defaultOptions = {
  * @return {function} a new handler function that will wrap the CORS headers
  */
 function cors(handler, opts) {
-    return (event, context, callback) => {
-        let rv;
-
-        // if the handler function prototype has argument less than 3 (that means it has no callback)
-        if (handler && handler.length < 3) {
-            // add the CORS to the returned value
-            // Note that we purposely not throw any error, the await should do the 'catch'
-            rv = handler(event, context).then((res) => addCORSWithOptions(res, event, opts));
-        } else {
-            rv = handler(event, context, (err, res) => {
-                if (res) {
-                    res = addCORSWithOptions(res, event, opts);
-                }
-                callback(err, res);
-            });
-        }
-
-        return rv;
-    };
+    // if the handler function prototype has argument less than 3 (that means it has no callback)
+    if (handler && handler.length < 3) {
+        // add the CORS to the returned value
+        // Note that we purposely not throw any error, the await should do the 'catch'
+        // Basically, we need to return a function with two parameters so that it is satisfying the JS8 async/await
+        return (event, context) => handler(event, context).then((res) => addCORSWithOptions(res, event, opts));
+    } else {
+        return (event, context, callback) => handler(event, context, (err, res) => {
+            if (res) {
+                res = addCORSWithOptions(res, event, opts);
+            }
+            callback(err, res);
+        });
+    }
 }
 
 /**
