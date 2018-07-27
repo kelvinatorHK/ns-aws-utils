@@ -14,12 +14,12 @@ const config = require('config');
  * @param replaceVarsBy - default is 'name' which does a name replacement.
  *                        the other options is 'order' which ignores the
  *                        name and replaces them in order.
- * @returns {Promise.<*>}
+ * @return {Promise.<*>}
  */
 async function localize(stringInfos, apps, locales, replaceVarsBy) {
     let retVal;
 
-    log.info({localizationRequest: {strings: stringInfos, apps: apps, locales:locales, replaceVarsBy: replaceVarsBy ? replaceVarsBy : 'name'}});
+    log.info({localizationRequest: {strings: stringInfos, apps: apps, locales: locales, replaceVarsBy: replaceVarsBy ? replaceVarsBy : 'name'}});
     if (Array.isArray(stringInfos) && Array.isArray(apps) && (locales ? Array.isArray(locales) : true)) {
         let response = await getTranslations(buildQueryParams(stringInfos, apps, locales));
 
@@ -41,7 +41,7 @@ async function localize(stringInfos, apps, locales, replaceVarsBy) {
  * @param replaceBy - name or order
  */
 function applyVariables(translations, variables, replaceBy) {
-    translations.localizations.forEach(translation => {
+    translations.localizations.forEach((translation) => {
         if (variables[translation.stringName]) {
             let localizedString = translation.localizedString;
 
@@ -61,7 +61,7 @@ function applyVariables(translations, variables, replaceBy) {
  * Calls the localization service (http) to retrieve the string translations.
  *
  * @param queryParams - based on the requested strings, apps, and locales
- * @returns {Promise.<*>}
+ * @return {Promise.<*>}
  */
 async function getTranslations(queryParams) {
     let retVal = null;
@@ -71,7 +71,7 @@ async function getTranslations(queryParams) {
                 method: 'GET',
                 url: `${config.properties.awsBase}/localization/v1${queryParams}`,
                 headers: {
-                    'Content-Type': 'application/json'/*, TODO: uncomment if needed
+                    'Content-Type': 'application/json'/* , TODO: uncomment if needed
                     'client_id': config.properties.clientId,
                     'client_secret': config.properties.clientSecret*/
                 }
@@ -92,12 +92,12 @@ async function getTranslations(queryParams) {
  * Puts string variables into an object keyed by stringName
  *
  * @param strings
- * @returns {{}}
+ * @return {{}}
  */
 function getStringVariables(strings) {
     let retVal = {};
 
-    strings.forEach(string => {
+    strings.forEach((string) => {
         retVal[string.stringName] = string.variables;
     });
 
@@ -110,7 +110,7 @@ function getStringVariables(strings) {
  * @param stringInfos
  * @param apps
  * @param locales
- * @returns {string}
+ * @return {string}
  */
 function buildQueryParams(stringInfos, apps, locales) {
     let queryParams = '?string=';
@@ -118,7 +118,7 @@ function buildQueryParams(stringInfos, apps, locales) {
     stringInfos.forEach((stringInfo, i, arr) => {
         queryParams += stringInfo.stringName;
         if (i < arr.length - 1) {
-            queryParams += ','
+            queryParams += ',';
         }
     });
     queryParams += '&app=' + apps.toString();

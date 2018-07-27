@@ -90,7 +90,6 @@ describe('eidify', function() {
         assert(response, 'it should have a response');
         assert(response.headers, 'it should have a response header');
         assert.equal(response.headers.eid, eid, 'it should have a eid in the response header');
-
     });
 
     it('should handle both eidify/cors using together with node8', async function() {
@@ -126,7 +125,7 @@ describe('eidify', function() {
         };
 
         try {
-            let response = await new Promise(function(resolve, reject) {
+            await new Promise(function(resolve, reject) {
                 eidify(handlerWithError)(event, context, function(err, res) {
                     if (err) {
                         reject(err);
@@ -140,6 +139,5 @@ describe('eidify', function() {
         } catch (e) {
             assert.notEqual(e, null, 'Error should not be null');
         }
-
     });
 });

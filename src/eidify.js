@@ -25,6 +25,13 @@ function eidify(handler) {
     }
 }
 
+/**
+ * addEid is a helper function to add the EID from the Custom Authorizer to the response.
+ *
+ * @param {object} res the response to the HTTP client
+ * @param {object} event the incoming Lambda event
+ * @return {object} the response to the HTTP client
+ */
 function addEid(res, event) {
     // we need to check the event to see if we hit the authorizer at all
     if (event && event.requestContext && event.requestContext.authorizer) {

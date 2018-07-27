@@ -198,7 +198,7 @@ describe('cors', function() {
         };
 
         try {
-            let response = await new Promise(function(resolve, reject) {
+            await new Promise(function(resolve, reject) {
                 cors(handlerWithError)(event, context, function(err, res) {
                     if (err) {
                         reject(err);
@@ -239,7 +239,7 @@ describe('cors', function() {
         };
 
         try {
-            let response = await cors(asyncHandler)(event, context);
+            await cors(asyncHandler)(event, context);
             assert(false, 'it should have an error');
         } catch (e) {
             assert.notEqual(e, null, 'Error should not be null');

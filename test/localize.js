@@ -9,48 +9,48 @@ const log = require('../src/logger');
 
 let multStringInfos = [
     {
-        "stringName":"INTL40"
+        'stringName': 'INTL40'
     },
     {
-        "stringName":"paymentExceedsAvailable",
-        "variables": {
-            "tag2": "TAG 2",
-            "whatever": "whatever"
+        'stringName': 'paymentExceedsAvailable',
+        'variables': {
+            'tag2': 'TAG 2',
+            'whatever': 'whatever'
         }
     },
     {
-        "stringName":"badcode"
+        'stringName': 'badcode'
     }
 ];
 
 let axiosMultGetReply = {
-    "applications": [
-        "common",
-        "shop"
+    'applications': [
+        'common',
+        'shop'
     ],
-    "id": "INTL40,paymentExceedsAvailable,badcode-common,shop-es_ES,en_US",
-    "locales": [
-        "es_ES",
-        "en_US"
+    'id': 'INTL40,paymentExceedsAvailable,badcode-common,shop-es_ES,en_US',
+    'locales': [
+        'es_ES',
+        'en_US'
     ],
-    "messages": [],
-    "localizations": [
+    'messages': [],
+    'localizations': [
         {
-            "stringName": "INTL40",
-            "rawString": "No podemos actualizar su información relacionada con el perfil.  Por favor, intentar más tarde.\r\n",
-            "localizedString": "No podemos actualizar su información relacionada con el perfil.  Por favor, intentar más tarde.\r\n"
+            'stringName': 'INTL40',
+            'rawString': 'No podemos actualizar su información relacionada con el perfil.  Por favor, intentar más tarde.\r\n',
+            'localizedString': 'No podemos actualizar su información relacionada con el perfil.  Por favor, intentar más tarde.\r\n'
         },
         {
-            "stringName": "paymentExceedsAvailable",
-            "rawString": "Payment amount <%tag1%> exceeds available amount <%tag2%>.",
-            "localizedString": "Payment amount <%tag1%> exceeds available amount <%tag2%>."
+            'stringName': 'paymentExceedsAvailable',
+            'rawString': 'Payment amount <%tag1%> exceeds available amount <%tag2%>.',
+            'localizedString': 'Payment amount <%tag1%> exceeds available amount <%tag2%>.'
         },
         {
-            "stringName": "badcode",
-            "localizedString": "?badcode?"
+            'stringName': 'badcode',
+            'localizedString': '?badcode?'
         }
     ],
-    "status": 200
+    'status': 200
 };
 
 describe('localize', function() {
