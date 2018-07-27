@@ -62,39 +62,6 @@ describe('logger', function() {
             assert.equal(resultObj.msg.password, '********', 'The data should be scrubbed');
         });
 
-        describe('#setTag', function() {
-            it('should display tag', function() {
-                log.setLevel('info');
-
-                let oldInfo = console.info;
-                let outputTag = 'my tag';
-                log.setTag(outputTag);
-
-                let output = {};
-
-                console.info = loggerTestFactory(output);
-                log.info('first message');
-                log.info('second message');
-                console.info = oldInfo;
-
-                let result = output.payload;
-                assert.equal(typeof result, 'string', 'The result should be a string');
-                let resultObj = JSON.parse(result);
-                assert.equal(resultObj.tag, outputTag, 'The tag should be displayed in the log');
-                assert.equal(resultObj.msg.message, 'second message', 'The result should be second message');
-            });
-        });
-
-        describe('#getTag', function() {
-            it('should return the tag ', function() {
-                let aTag = 'my tag';
-                log.setTag(aTag);
-                let result = log.getTag();
-
-                assert.equal(result, aTag, 'getTag should return the same result');
-            });
-        });
-
         it('should be able to turn off scrubbing', function() {
             log.setLevel('info');
             log.setScrubbing(false);
@@ -301,6 +268,27 @@ describe('logger', function() {
     });
 
     describe('#setTag', function() {
+        it('should display a JSON tag when the original tag is a string', function() {
+            log.setLevel('info');
+
+            let oldInfo = console.info;
+            let outputTag = 'my tag';
+            log.setTag(outputTag);
+
+            let output = {};
+
+            console.info = loggerTestFactory(output);
+            log.info('first message');
+            log.info('second message');
+            console.info = oldInfo;
+
+            let result = output.payload;
+            assert.equal(typeof result, 'string', 'The result should be a string');
+            let resultObj = JSON.parse(result);
+            assert.deepEqual(resultObj.tag, {key: outputTag}, 'The tag should be displayed in the log');
+            assert.equal(resultObj.msg.message, 'second message', 'The result should be second message');
+        });
+
         it('should see the tag in the log', function() {
             let oldLog = console.info;
             let outputMessage = 'test information';
@@ -319,6 +307,95 @@ describe('logger', function() {
             assert.equal(resultObj.level, 'info', 'The level should be info');
             assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
             assert.deepEqual(resultObj.tag, tagMessage, 'The tag should be the same');
+        });
+    });
+
+    describe('#getTag', function() {
+        it('should return the JSON tag', function() {
+            let aTag = {myTag: 'my tag'};
+            log.setTag(aTag);
+            let result = log.getTag();
+
+            assert.equal(result, aTag, 'getTag should return the same result');
+        });
+    });
+
+    describe('#addTag', function() {
+        it('should add the new tag to the existing tag', function() {
+            let oldLog = console.info;
+            let outputMessage = 'test information';
+            let output = {};
+
+            console.info = loggerTestFactory(output);
+            log.setTag({a: 'a', b: 'b'}); // set the tag with a JSON object
+            log.addTag({newTag: 'some new tag'});
+            log.info(outputMessage);
+            console.info = oldLog;
+
+            let result = output.payload;
+            assert.equal(typeof result, 'string', 'The result should be a string');
+            let resultObj = JSON.parse(result);
+            assert.equal(resultObj.level, 'info', 'The level should be info');
+            assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
+            assert.deepEqual(resultObj.tag, {a: 'a', b: 'b', newTag: 'some new tag'}, 'The tag should be the same');
+        });
+
+        it('should add the new JSON tag to the original empty tag', function() {
+            let oldLog = console.info;
+            let outputMessage = 'test information';
+            let output = {};
+
+            console.info = loggerTestFactory(output);
+            log.setTag(); // Empty out the tag first
+            log.addTag({newTag: 'some new tag'});
+            log.info(outputMessage);
+            console.info = oldLog;
+
+            let result = output.payload;
+            assert.equal(typeof result, 'string', 'The result should be a string');
+            let resultObj = JSON.parse(result);
+            assert.equal(resultObj.level, 'info', 'The level should be info');
+            assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
+            console.log('tag:', resultObj.tag);
+            assert.deepEqual(resultObj.tag, {newTag: 'some new tag'}, 'The tag should be the same');
+        });
+
+        it('should add the new string tag to the existing tag', function() {
+            let oldLog = console.info;
+            let outputMessage = 'test information';
+            let output = {};
+
+            console.info = loggerTestFactory(output);
+            log.setTag({a: 'a', b: 'b'}); // set the tag with a JSON object
+            log.addTag('some new tag');
+            log.info(outputMessage);
+            console.info = oldLog;
+
+            let result = output.payload;
+            assert.equal(typeof result, 'string', 'The result should be a string');
+            let resultObj = JSON.parse(result);
+            assert.equal(resultObj.level, 'info', 'The level should be info');
+            assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
+            assert.deepEqual(resultObj.tag, {a: 'a', b: 'b', key: 'some new tag'}, 'The tag should be the same');
+        });
+
+        it('should do nothing on the existing tag when you try to add an empty tag', function() {
+            let oldLog = console.info;
+            let outputMessage = 'test information';
+            let output = {};
+
+            console.info = loggerTestFactory(output);
+            log.setTag({a: 'a', b: 'b'}); // set the tag with a JSON object
+            log.addTag();
+            log.info(outputMessage);
+            console.info = oldLog;
+
+            let result = output.payload;
+            assert.equal(typeof result, 'string', 'The result should be a string');
+            let resultObj = JSON.parse(result);
+            assert.equal(resultObj.level, 'info', 'The level should be info');
+            assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
+            assert.deepEqual(resultObj.tag, {a: 'a', b: 'b'}, 'The tag should be the same');
         });
     });
 });

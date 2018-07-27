@@ -23,7 +23,12 @@ let tag = '';
  * @param {string | object} [newTag] a string or object to be tagged
  */
 function setTag(newTag) {
-    tag = newTag;
+    if (typeof newTag === 'string') {
+        // force it to become a JSON object with the key name as 'key'...
+        tag = {key: newTag};
+    } else {
+        tag = newTag;
+    }
 }
 
 /**
@@ -33,6 +38,42 @@ function setTag(newTag) {
  */
 function getTag() {
     return tag;
+}
+
+/**
+ * addTag is a function to add additional tag.  It will try to add the new tag into the current one.
+ * If the incoming tag is a string, it will be converted to become an object with the key = 'key'.
+ *
+ * @param {string | object} [newTag] a string or object to be tagged
+ */
+function addTag(newTag) {
+    // if the current tag is null or undefined
+    // (I made an assumption that the tag is not '0' or false - who would do that?)
+    if (!tag) {
+        setTag(newTag); // call setTag to set it
+    } else {
+        if (newTag) {
+            // We are trying to combine the two JSON objects together, we will overwrite the props using the newTag
+            // Note that we override the original with a new Object to prevent the unexpected behavior.
+            let combined = {};
+
+            // Copy the attributes of the original tag
+            Object.keys(tag).forEach(function(prop) {
+                combined[prop] = tag[prop];
+            });
+
+            if (typeof newTag === 'string') {
+                combined['key'] = newTag; // if the newTag is a string, put that under 'key'
+            } else {
+                // otherwise, overwrite the combined JSON with the newTag's attributes
+                Object.keys(newTag).forEach(function(prop) {
+                    combined[prop] = newTag[prop];
+                });
+            }
+
+            tag = combined;
+        }
+    }
 }
 
 /**
@@ -153,6 +194,7 @@ module.exports = {
     getLevel: getLevel,
     setTag: setTag,
     getTag: getTag,
+    addTag: addTag,
     setScrubbing: setScrubbing,
     config: config
 };
