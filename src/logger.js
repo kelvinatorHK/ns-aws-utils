@@ -55,7 +55,7 @@ function addTag(newTag) {
         if (newTag) {
             // Note that we override the original with a new Object to prevent the unexpected behavior.
             if (typeof newTag === 'string') {
-                tag = Object.assign({}, tag);  // shallow clone the tag object
+                tag = Object.assign({}, tag); // shallow clone the tag object
                 tag['key'] = newTag; // if the newTag is a string, put that under 'key'
             } else {
                 // otherwise, merge tag and newTag together
