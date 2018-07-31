@@ -53,25 +53,14 @@ function addTag(newTag) {
         setTag(newTag); // call setTag to set it
     } else {
         if (newTag) {
-            // We are trying to combine the two JSON objects together, we will overwrite the props using the newTag
             // Note that we override the original with a new Object to prevent the unexpected behavior.
-            let combined = {};
-
-            // Copy the attributes of the original tag
-            Object.keys(tag).forEach(function(prop) {
-                combined[prop] = tag[prop];
-            });
-
             if (typeof newTag === 'string') {
-                combined['key'] = newTag; // if the newTag is a string, put that under 'key'
+                tag = Object.assign({}, tag); // shallow clone the tag object
+                tag['key'] = newTag; // if the newTag is a string, put that under 'key'
             } else {
-                // otherwise, overwrite the combined JSON with the newTag's attributes
-                Object.keys(newTag).forEach(function(prop) {
-                    combined[prop] = newTag[prop];
-                });
+                // otherwise, merge tag and newTag together
+                tag = Object.assign(tag, newTag);
             }
-
-            tag = combined;
         }
     }
 }
