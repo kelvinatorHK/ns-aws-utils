@@ -26,6 +26,24 @@ npm install ns-aws-utils --save
 ```
 
 ## Usage
+
+### For Country Information
+Information for all supported countries which includes selected timezone offset.
+
+```javascript
+const cntry = require('ns-aws-utils').countries;
+
+// return all countries
+let countries = getCountries();
+```
+Information for a specific country.
+```javascript
+const cntry = require('ns-aws-utils').countries;
+
+// for specific country
+let country = getCountry(country);
+```
+
 ### For CORS handler:
 Just wrap the handler function with the cors function:
 ```javascript
