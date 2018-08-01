@@ -1,210 +1,205 @@
 'use strict';
 
 const countries = {
-    "AR": {
-        "tmzOffset": -3
+    'AR': {
+        'tmzOffset': -3
     },
-    "AT": {
-        "tmzOffset": 1
+    'AT': {
+        'tmzOffset': 1
     },
-    "AU": {
-        "tmzOffset": 10
+    'AU': {
+        'tmzOffset': 10
     },
-    "BE": {
-        "tmzOffset": 1
+    'BE': {
+        'tmzOffset': 1
     },
-    "BN": {
-        "tmzOffset": 8
+    'BN': {
+        'tmzOffset': 8
     },
-    "BR": {
-        "tmzOffset": -3
+    'BR': {
+        'tmzOffset': -3
     },
-    "CA": {
-        "tmzOffset": -7
+    'CA': {
+        'tmzOffset': -7
     },
-    "CH": {
-        "tmzOffset": 1
+    'CH': {
+        'tmzOffset': 1
     },
-    "CL": {
-        "tmzOffset": -3
+    'CL': {
+        'tmzOffset': -3
     },
-    "CN": {
-        "tmzOffset": 8
+    'CN': {
+        'tmzOffset': 8
     },
-    "CO": {
-        "tmzOffset": -5
+    'CO': {
+        'tmzOffset': -5
     },
-    "CR": {
-        "tmzOffset": -6
+    'CR': {
+        'tmzOffset': -6
     },
-    "CZ": {
-        "tmzOffset": 1
+    'CZ': {
+        'tmzOffset': 1
     },
-    "DE": {
-        "tmzOffset": 1
+    'DE': {
+        'tmzOffset': 1
     },
-    "DK": {
-        "tmzOffset": 1
+    'DK': {
+        'tmzOffset': 1
     },
-    "ES": {
-        "tmzOffset": 1
+    'ES': {
+        'tmzOffset': 1
     },
-    "ET": {
-        "tmzOffset": 3
+    'ET': {
+        'tmzOffset': 3
     },
-    "EU": {
-        "tmzOffset": 1
+    'EU': {
+        'tmzOffset': 1
     },
-    "FI": {
-        "tmzOffset": 2
+    'FI': {
+        'tmzOffset': 2
     },
-    "FJ": {
-        "tmzOffset": 12
+    'FJ': {
+        'tmzOffset': 12
     },
-    "FR": {
-        "tmzOffset": 1
+    'FR': {
+        'tmzOffset': 1
     },
-    "GB": {
-        "tmzOffset": 0
+    'GB': {
+        'tmzOffset': 0
     },
-    "GI": {
-        "tmzOffset": 1
+    'GI': {
+        'tmzOffset': 1
     },
-    "GT": {
-        "tmzOffset": -6
+    'GT': {
+        'tmzOffset': -6
     },
-    "GU": {
-        "tmzOffset": 10
+    'GU': {
+        'tmzOffset': 10
     },
-    "HK": {
-        "tmzOffset": 8
+    'HK': {
+        'tmzOffset': 8
     },
-    "HN": {
-        "tmzOffset": -6
+    'HN': {
+        'tmzOffset': -6
     },
-    "HU": {
-        "tmzOffset": 1
+    'HU': {
+        'tmzOffset': 1
     },
-    "ID": {
-        "tmzOffset": 7
+    'ID': {
+        'tmzOffset': 7
     },
-    "IE": {
-        "tmzOffset": 0
+    'IE': {
+        'tmzOffset': 0
     },
-    "IL": {
-        "tmzOffset": 2
+    'IL': {
+        'tmzOffset': 2
     },
-    "IS": {
-        "tmzOffset": 0
+    'IS': {
+        'tmzOffset': 0
     },
-    "IT": {
-        "tmzOffset": 1
+    'IT': {
+        'tmzOffset': 1
     },
-    "JP": {
-        "tmzOffset": 9
+    'JP': {
+        'tmzOffset': 9
     },
-    "KR": {
-        "tmzOffset": 9
+    'KR': {
+        'tmzOffset': 9
     },
-    "LU": {
-        "tmzOffset": 1
+    'LU': {
+        'tmzOffset': 1
     },
-    "MKTG": {
-        "tmzOffset": -7
+    'MO': {
+        'tmzOffset': 8
     },
-    "MO": {
-        "tmzOffset": 8
+    'MX': {
+        'tmzOffset': -6
     },
-    "MX": {
-        "tmzOffset": -6
+    'MY': {
+        'tmzOffset': 8
     },
-    "MY": {
-        "tmzOffset": 8
+    'NC': {
+        'tmzOffset': 11
     },
-    "NC": {
-        "tmzOffset": 11
+    'NL': {
+        'tmzOffset': 1
     },
-    "NL": {
-        "tmzOffset": 1
+    'NO': {
+        'tmzOffset': 1
     },
-    "NO": {
-        "tmzOffset": 1
+    'NZ': {
+        'tmzOffset': 12
     },
-    "NZ": {
-        "tmzOffset": 12
+    'PF': {
+        'tmzOffset': 5
     },
-    "PF": {
-        "tmzOffset": 5
+    'PH': {
+        'tmzOffset': 8
     },
-    "PH": {
-        "tmzOffset": 8
+    'PL': {
+        'tmzOffset': 1
     },
-    "PL": {
-        "tmzOffset": 1
+    'PR': {
+        'tmzOffset': -4
     },
-    "PR": {
-        "tmzOffset": -4
+    'PT': {
+        'tmzOffset': 0
     },
-    "PT": {
-        "tmzOffset": 0
+    'RO': {
+        'tmzOffset': 2
     },
-    "RO": {
-        "tmzOffset": 2
+    'RU': {
+        'tmzOffset': 3
     },
-    "RU": {
-        "tmzOffset": 3
+    'SE': {
+        'tmzOffset': 1
     },
-    "SE": {
-        "tmzOffset": 1
+    'SG': {
+        'tmzOffset': 8
     },
-    "SG": {
-        "tmzOffset": 8
+    'SK': {
+        'tmzOffset': 1
     },
-    "SK": {
-        "tmzOffset": 1
+    'SV': {
+        'tmzOffset': -6
     },
-    "SV": {
-        "tmzOffset": -6
+    'TH': {
+        'tmzOffset': 7
     },
-    "TH": {
-        "tmzOffset": 7
+    'TR': {
+        'tmzOffset': 2
     },
-    "TR": {
-        "tmzOffset": 2
+    'TW': {
+        'tmzOffset': 8
     },
-    "TW": {
-        "tmzOffset": 8
+    'UA': {
+        'tmzOffset': 2
     },
-    "UA": {
-        "tmzOffset": 2
+    'US': {
+        'tmzOffset': -7
     },
-    "US": {
-        "tmzOffset": -7
+    'VE': {
+        'tmzOffset': -4
     },
-    "VE": {
-        "tmzOffset": -4
+    'VN': {
+        'tmzOffset': 7
     },
-    "VN": {
-        "tmzOffset": 7
+    'WO': {
+        'tmzOffset': -7
     },
-    "WBR": {
-        "tmzOffset": -7
+    'WS': {
+        'tmzOffset': -7
     },
-    "WO": {
-        "tmzOffset": -7
-    },
-    "WS": {
-        "tmzOffset": -7
-    },
-    "ZA": {
-        "tmzOffset": 2
+    'ZA': {
+        'tmzOffset': 2
     }
 };
 
 
 /**
  * Return information for all countries
- * @return Map */
+ * @return {Object} map of countries
+ * */
 function getCountries() {
     return countries;
 }
@@ -212,7 +207,7 @@ function getCountries() {
 
 /**
  * return information for country
- * @param country
+ * @param {string} country country code
  * @return {*}
  */
 function getCountry(country) {
