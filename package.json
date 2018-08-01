@@ -1,6 +1,6 @@
 {
   "name": "ns-aws-utils",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "A utils used by Nuskin AWS team",
   "main": "src/index.js",
   "scripts": {
