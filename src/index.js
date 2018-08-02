@@ -5,11 +5,13 @@ const logger = require('./logger');
 const scrubber = require('./scrubber');
 const eidify = require('./eidify');
 const localize = require('./localize');
+const country = require('./country');
 
 module.exports = {
     cors: cors,
     eidify: eidify,
     logger: logger,
     scrubber: scrubber,
-    localize: localize
+    localize: localize,
+    country: country
 };

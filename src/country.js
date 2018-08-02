@@ -211,7 +211,11 @@ function getCountries() {
  * @return {*}
  */
 function getCountry(country) {
-    return countries[country];
+    if(country in countries) {
+        return countries[country];
+    } else {
+        throw Error(`invalid country ${country}`);
+    }
 }
 
 

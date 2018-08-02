@@ -25,9 +25,7 @@ describe('countries', () => {
     it('get a non existent country', () => {
         try {
             let country = cntry.getCountry('BAD');
-            assert(typeof country === 'undefined');
-        } catch (err) {
-            assert.fail(err);
-        }
+            assert.fail(country);
+        } catch (err) {}
     });
 });
