@@ -152,6 +152,18 @@ log.setTag('');  // remove the tag (method #2)
 log.setTag(null);  // remove the tag (method #3)
 ```
 
+If you want to append more information to the current tag, you can use addTag:
+```javascript
+log.setTag({key1: 'abc'});
+log.addTag({key2: 'xyz'});
+log.info({myMessage: 'message 1'});
+```
+
+Then, the result will look like the following:
+```
+{"level":"info","tag":{"key1":"abc","key2":"xyz"},"msg":{"myMessage":"message 1"}}
+```
+
 ### For Localization handler:
 
 The localization handler retrieves localized strings from the string cache in 
