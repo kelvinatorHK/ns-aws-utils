@@ -134,6 +134,18 @@ describe('scrubber', function() {
 
             assert.deepEqual(scrubber.scrub(obj), JSON.parse(JSON.stringify(obj)), 'It should be the same');
         });
+
+        it('should scrub the sensitive data even if it is in stringified json', function() {
+            let obj = {
+                attr1: 'abc',
+                'data': '{\"pan\":\"4111111111111111\",\"CardNumber\":\"1234567890\"}'
+            };
+
+            let scrubbed = scrubber.scrub(obj);
+            
+            assert.equal(scrubbed.data, '{\"pan\":\"********\",\"CardNumber\":\"********\"}', 'Sensitive data in String should be scrubbed');
+        });
+
     });
 
     describe('#setReplacement', function() {

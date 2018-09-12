@@ -7,6 +7,7 @@ const config = {
     // The default RegExp pattern is
     // /^(pan|CardNumber|TrackOne|IBAN|VerificationCode|BankAccount|pass|password|taxIDs|newPassword)$/;
     pattern: createRegExpFromKeys(DEFAULT_KEYS),
+    patternGroup: createRegGroupExpFromKeys(DEFAULT_KEYS),
     // The default replacement string is '********'
     replacement: '********'
 };
@@ -30,12 +31,31 @@ function createRegExpFromKeys(keys) {
 }
 
 /**
+ * createRegGroupExpPromKeys is a function to create a RegExp object based on the given array.
+ * Note that you cannot have '|' in the value of the keys.
+ *
+ * @param {Array} keys the array of keys whose value needs to be scrubbed
+ * @return {RegExp} a regular expression to match any key i the keys array
+ */
+function createRegGroupExpFromKeys(keys) {
+    let rv = null;
+
+    if (keys && (keys.constructor === Array) && (keys.length > 0)) {
+        // 'i' means case-insensitive
+        rv = new RegExp('\\"(' + keys.join('|') + ')\\":\\"(.*?)\\"', 'ig');
+    }
+
+    return rv;
+}
+
+/**
  * setKeysToScrub is a function to set the RegExp pattern in the config with the given array.
  *
  * @param {Array} keys of the sensitive data to be scrubbed
  */
 function setKeysToScrub(keys) {
     setPattern(createRegExpFromKeys(keys));
+    setGroupPattern(createRegGroupExpFromKeys(keys));
 }
 
 /**
@@ -56,6 +76,17 @@ function setKeysWithDefaultToScrub(keys) {
 function setPattern(pattern) {
     if (pattern && (pattern.constructor === RegExp)) {
         config.pattern = pattern;
+    }
+}
+
+/**
+ * setGroupPattern is a setter function to set the matching pattern (RegExp) of the key.
+ *
+ * @param {RegExp} pattern a pattern for the scrubber to match
+ */
+function setGroupPattern(pattern) {
+    if (pattern && (pattern.constructor === RegExp)) {
+        config.patternGroup = pattern;
     }
 }
 
@@ -103,12 +134,12 @@ function recursiveScrub(original, seen) {
             seen.add(original);
             if (original.constructor === Array) {
                 // if it is an Array, we go scrub each individual item
-                rv = original.map(function(item) {
+                rv = original.map(function (item) {
                     return recursiveScrub(item, seen);
                 });
             } else {
                 rv = {};
-                Object.keys(original).forEach(function(key) {
+                Object.keys(original).forEach(function (key) {
                     if (key.match(config.pattern)) {
                         rv[key] = config.replacement;
                     } else {
@@ -117,6 +148,11 @@ function recursiveScrub(original, seen) {
                 });
             }
         }
+    } else if (typeof original === 'string') {
+        rv = original.replace(config.patternGroup, function(match, tag, value) {
+            return match.replace(value, config.replacement);
+        });
+
     } else {
         rv = original;
     }
