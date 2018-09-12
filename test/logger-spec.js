@@ -356,7 +356,6 @@ describe('logger', function() {
             let resultObj = JSON.parse(result);
             assert.equal(resultObj.level, 'info', 'The level should be info');
             assert.equal(resultObj.msg.message, outputMessage, 'The msg should be the same');
-            console.log('tag:', resultObj.tag);
             assert.deepEqual(resultObj.tag, {newTag: 'some new tag'}, 'The tag should be the same');
         });
 
