@@ -104,13 +104,15 @@ describe('scrubber', function() {
             let obj = {
                 attr1: {
                     IBAN: 'secret',
+                    number: 'number',
                     inner1: 'abc'
                 },
                 attr2: 'xyz'
             };
 
             let scrubbed = scrubber.scrub(obj);
-            assert.equal(scrubbed.attr1.IBAN, '********', 'The sensitive data should be scrubbed');
+            assert.equal(scrubbed.attr1.IBAN, '********', 'IBAN should be scrubbed');
+            assert.equal(scrubbed.attr1.number, '********', 'number should be scrubbed');
         });
 
         it('should scrub the sensitive data even if it is an array', function() {
@@ -138,12 +140,12 @@ describe('scrubber', function() {
         it('should scrub the sensitive data even if it is in stringified json', function() {
             let obj = {
                 attr1: 'abc',
-                'data': '{\"pan\":\"4111111111111111\",\"CardNumber\":\"1234567890\"}'
+                'data': '{\"pan\":\"4111111111111111\",\"CardNumber\":\"1234567890\",\"number\":\"1234567890\"}'
             };
 
             let scrubbed = scrubber.scrub(obj);
             
-            assert.equal(scrubbed.data, '{\"pan\":\"********\",\"CardNumber\":\"********\"}', 'Sensitive data in String should be scrubbed');
+            assert.equal(scrubbed.data, '{\"pan\":\"********\",\"CardNumber\":\"********\",\"number\":\"********\"}', 'Sensitive data in String should be scrubbed');
         });
 
     });
