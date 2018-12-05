@@ -130,6 +130,9 @@ const countries = {
     'NZ': {
         'tmzOffset': 12
     },
+    'PE': {
+        'tmzOffset': -5
+    },
     'PF': {
         'tmzOffset': 5
     },
