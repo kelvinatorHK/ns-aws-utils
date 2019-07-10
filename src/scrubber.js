@@ -42,7 +42,7 @@ function createRegGroupExpFromKeys(keys) {
 
     if (keys && (keys.constructor === Array) && (keys.length > 0)) {
         // 'i' means case-insensitive
-        rv = new RegExp('\\"(' + keys.join('|') + ')\\":\\s*\\"(.*?)\\"', 'ig');
+        rv = new RegExp('\\"(' + keys.join('|') + ')\\"\\s*:\\s*\\"(.*?)\\"', 'ig');
     }
 
     return rv;
