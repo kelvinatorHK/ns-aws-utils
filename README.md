@@ -218,3 +218,29 @@ let localizations = localize(
     }
 ]
 ```
+
+### For Correlation
+Correlation provides for extracting and retaining a correlation ID that can be used in log statements to 
+correlate transactions between applications. The correlation is the first value found in the following sequence. 
+The correlation ID should be logged as the 'nse.correlation_id'. The logging setTag or addTag functions can help with this.
+
+1. X-Correlation-ID or X-Request_ID header coming from the client. This allows the client to correlate its requests
+ with services processing.
+2. The xray trace id  X_AMZN_TRACE_ID. This will allow us to also pull up the XRAY trace of the AWS resources.
+3. The “awsRequestId”. This is provided early in the transaction so will be available from the beginning.
+4. Generated UUID or one from ns-aws-utils (I think you mentioned it provides one).
+
+**Usage example:**
+```javascript
+const nsAwsUtils = require('ns-aws-utils');
+const correlate = nsAwsUtils.correlate;
+
+// capture and save the correlation ID from the event or the context as per the rules
+let correlationId = correlate.captureCorrelationId(event, context);
+
+// retrieve a previously saved correlation ID
+let correlationId = correlate.retrieveCorrelationId();
+
+// add the correlation id as a tag that will be added to each log message
+log.addTag( {'nse.correlation_id': correlationId} )
+```

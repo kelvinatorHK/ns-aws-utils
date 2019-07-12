@@ -6,6 +6,7 @@ const scrubber = require('./scrubber');
 const eidify = require('./eidify');
 const localize = require('./localize');
 const country = require('./country');
+const correlate = require('./correlate');
 
 module.exports = {
     cors: cors,
@@ -13,5 +14,6 @@ module.exports = {
     logger: logger,
     scrubber: scrubber,
     localize: localize,
-    country: country
+    country: country,
+    correlate: correlate
 };
