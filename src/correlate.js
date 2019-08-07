@@ -7,23 +7,25 @@ let correlationId;
 
 /**
  * Extract the correlation ID from the input, save it and return it.
- * @param event
- * @param context
+ * @param {object} event
+ * @param {object} context
+ * @return {string}
  */
 function captureCorrelationId(event, context) {
-    if (event && event.headers) {
+    let headers = (event && event.headers) ? event.headers: {};
+    let lowerHeaderKeys = Object.keys(headers).reduce((map, key) => {
+        map[key.toLowerCase()] = key; return map;
+    }, {});
 
-        // produce lower case mapping of keys for case insensitive compare
-        let lowerCaseKeys = {};
-        Object.keys(event.headers).forEach(key => lowerCaseKeys[key.toLowerCase()] = key);
-
-        if ('x-correlation-id' in lowerCaseKeys) {
-            correlationId = event.headers[lowerCaseKeys['x-correlation-id']];
-        } else if ('x-request-id' in lowerCaseKeys) {
-            correlationId = event.headers[lowerCaseKeys['x-request-id']];
-        }
+    if ('x-correlation-id' in lowerHeaderKeys) {
+        correlationId = headers[lowerHeaderKeys['x-correlation-id']];
+    } else if ('x-request-id' in lowerHeaderKeys) {
+        correlationId = headers[lowerHeaderKeys['x-request-id']];
     } else if (process.env.X_AMZN_TRACE_ID) {
         correlationId = process.env.X_AMZN_TRACE_ID;
+    } else if ('x-amzn-trace-id' in lowerHeaderKeys) {
+        let id = headers[lowerHeaderKeys['x-amzn-trace-id']];
+        correlationId = id.startsWith('Root=') ? id.substring(5) : id;
     } else if (context && context.awsRequestID) {
         correlationId = context.awsRequestID;
     } else {
@@ -35,11 +37,13 @@ function captureCorrelationId(event, context) {
 
 
 /**
- * Return the previously saved correlation ID. If a coorelation ID has not previously been saved, generate a UUID, save it and return it.
- * @return {*}
+ * Return the previously saved correlation ID. If a coorelation ID has not previously been saved,
+ * generate a UUID, save it and return it.
+ *
+ * @return {string} correlation id
  */
 function retrieveCorrelationId() {
-    if(!correlationId) {
+    if (!correlationId) {
         correlationId = uuidv1();
     }
     return correlationId;
