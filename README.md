@@ -1,4 +1,4 @@
-# ns-aws-utils
+# ns-aws-utils (DEPRECATED!!! This project has been moved to gitlab at ns-aws-servces/ns-aws-utils)
 ns-aws-utils is a utility library that helps the development of the
 serverless application.  It contains a cors function to add the CORS
 headers to the client HTTP response.  Meanwhile, it contains a custom
