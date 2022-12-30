@@ -18,7 +18,7 @@
   "homepage": "https://github.com/kelvinatorHK/ns-aws-utils#readme",
   "devDependencies": {
     "axios-mock-adapter": "^1.16.0",
-    "mocha": "^6.1.3",
+    "mocha": "^10.2.0",
     "nyc": "^14.0.0"
   },
   "dependencies": {
